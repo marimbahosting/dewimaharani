@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dewi Maharani Private Room</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+/* BACKGROUND */
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url('https://res.cloudinary.com/dzbzxiz3r/image/upload/f_auto,q_auto/1739AE78-9A0E-4224-8D59-74EAEF2C73B7_wyqvlp') center/cover no-repeat;
+  filter: blur(5px) brightness(0.7);
+  z-index: -2;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,105,180,0.2), rgba(0,0,0,0.85));
+  z-index: -1;
+}
+
+/* FLOATING MEMBER */
+.floating-member {
+  position: fixed;
+  top: 50px;
+  right: 15px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 999;
+  box-shadow: 0 0 10px rgba(255,105,180,0.4);
+}
+
+.floating-member.bump {
+  animation: bump 0.3s;
+}
+
+@keyframes bump {
+  50% { transform: scale(1.1); }
+}
+
+/* CENTER */
+.wrapper {
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+/* APP */
+.app {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* PROFILE */
+.profile-card { text-align: center; }
+
+.profile-card img {
+  width: 140px;
+  height: 170px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 20px rgba(255,105,180,0.6);
+}
+
+.name { margin-top: 10px; font-size: 18px; font-weight: bold; }
+.age { font-size: 13px; opacity: 0.7; }
+
+.badge-21 {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: rgba(255,0,0,0.7);
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+/* GALLERY */
+.gallery {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+}
+
+.photo-card {
+  min-width: 110px;
+  height: 150px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-card.locked img {
+  filter: blur(8px) brightness(0.5);
+}
+
+.lock {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,105,180,0.7);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  padding: 18px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.title { color: #ff8fab; }
+
+.countdown { font-size: 20px; margin: 10px 0; }
+.members { font-size: 13px; opacity: 0.8; }
+
+/* INPUT */
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  margin-top: 10px;
+}
+
+/* CHECKBOX */
+.age-check {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.age-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: #ff4d6d;
+}
+
+.age-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.age-title { font-size: 12px; font-weight: bold; }
+.age-desc { font-size: 11px; opacity: 0.7; }
+
+/* BUTTON */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg,#ff4d6d,#ff8fab);
+  color: white;
+  font-weight: bold;
+}
+
+.btn.loading { opacity: 0.6; pointer-events: none; }
+
+.btn.loading::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid white;
+  border-top: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 8px;
+  animation: spin 1s linear infinite;
+}
+
+/* CTA */
+.inline-cta {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.inline-cta span {
+  color: #ff8fab;
+  font-weight: bold;
+}
+
+/* POPUP */
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: #111;
+  padding: 25px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* AGE GATE */
+.age-gate {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.age-box {
+  background: #111;
+  padding: 25px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* ANIM */
+.shake { animation: shake 0.3s; }
+@keyframes shake {
+  0%{transform:translateX(-5px);}
+  50%{transform:translateX(5px);}
+  100%{transform:translateX(0);}
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+<div class="overlay"></div>
+
+<!-- FLOATING MEMBER -->
+<div class="floating-member" id="floatingMember" onclick="goToWA()">
+  👥 578 Member
+</div>
+
+<!-- AGE GATE -->
+<div id="ageGate" class="age-gate">
+  <div class="age-box">
+    <h2> 21+ Konten Dewasa</h2>
+    <p>Halaman ini hanya untuk pengguna dewasa</p>
+    <button onclick="acceptAge()">Saya 21+</button>
+    <button onclick="exitPage()">Keluar</button>
+  </div>
+</div>
+
+<div class="wrapper">
+  <div class="app">
+
+    <div class="profile-card">
+      <img src="https://res.cloudinary.com/dzbzxiz3r/image/upload/f_auto,q_auto/1739AE78-9A0E-4224-8D59-74EAEF2C73B7_wyqvlp">
+      <div class="name">Dewi Maharani 💖</div>
+      <div class="age">25 Tahun • Private Room</div>
+      <div class="badge-21">21+ Konten Dewasa</div>
+    </div>
+
+    <div class="gallery">
+      <div class="photo-card"><img src="https://picsum.photos/200/300?1"></div>
+      <div class="photo-card locked" onclick="goToWA()">
+        <div class="lock">🔒 Buka VIP</div>
+        <img src="https://picsum.photos/200/300?2">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">💖 Private Session</div>
+      <input type="text" id="tokenInput" placeholder="Masukkan token VIP...">
+
+      <label class="age-check">
+        <input type="checkbox" id="ageConfirm">
+        <div class="age-text">
+          <span class="age-desc">Saya berusia 21+ dan memahami konten ini</span>
+        </div>
+      </label>
+
+      <button class="btn" id="btn" onclick="checkToken()">Masuk</button>
+
+      <div class="inline-cta" onclick="goToWA()">
+        Belum punya token? <span>💬 Beli di WhatsApp</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- POPUP -->
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <h3>❌ Token Salah</h3>
+    <button onclick="goToWA()">💬 Beli Token</button>
+    <button onclick="closePopup()">Coba Lagi</button>
+  </div>
+</div>
+
+<script>
+const VALID_TOKEN="123";
+
+/* AGE GATE */
+function acceptAge(){
+  localStorage.setItem("ageVerified","true");
+  document.getElementById("ageGate").style.display="none";
+}
+function exitPage(){ window.location.href="https://google.com"; }
+window.onload=()=>{
+  if(localStorage.getItem("ageVerified")){
+    document.getElementById("ageGate").style.display="none";
+  }
+};
+
+/* BUTTON */
+const btn=document.getElementById("btn");
+const ageCheck=document.getElementById("ageConfirm");
+
+btn.disabled=true;
+btn.style.opacity="0.5";
+
+ageCheck.onchange=()=>{
+  btn.disabled=!ageCheck.checked;
+  btn.style.opacity=ageCheck.checked?"1":"0.5";
+};
+
+/* MEMBER */
+let count=578;
+setInterval(()=>{
+  if(Math.random()<0.3){
+    count++;
+
+    document.getElementById("memberCount").innerText="👥 "+count+" Member";
+    let fm=document.getElementById("floatingMember");
+    fm.innerText="👥 "+count+" Member";
+
+    fm.classList.add("bump");
+    setTimeout(()=>fm.classList.remove("bump"),300);
+  }
+},5000);
+
+/* TOKEN */
+function checkToken(){
+  let input=document.getElementById("tokenInput");
+  let val=input.value;
+
+  btn.classList.add("loading");
+
+  setTimeout(()=>{
+    if(val===VALID_TOKEN){
+      window.location.href="live.html";
+    }else{
+      btn.classList.remove("loading");
+      input.classList.add("shake");
+      navigator.vibrate && navigator.vibrate([50,50]);
+      setTimeout(()=>input.classList.remove("shake"),300);
+      document.getElementById("popup").style.display="flex";
+    }
+  },1000);
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display="none";
+}
+
+function goToWA(){
+  let msg="Halo, saya ingin membeli akses VIP 💖";
+  window.location.href="https://wa.me/6285845441569?text="+encodeURIComponent(msg);
+}
+
+/* COUNTDOWN */
+setInterval(()=>{
+  let now=new Date();
+  let t=new Date();
+  t.setHours(21,0,0);
+  if(now>t)t.setDate(t.getDate()+1);
+
+  let d=t-now;
+  document.getElementById("countdown").innerText=
+    Math.floor(d/3600000)+"h "+
+    Math.floor((d/60000)%60)+"m "+
+    Math.floor((d/1000)%60)+"s";
+},1000);
+</script>
+
+</body>
+</html>
